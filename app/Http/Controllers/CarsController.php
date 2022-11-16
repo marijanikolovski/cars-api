@@ -13,9 +13,10 @@ class CarsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cars = Car::all();
+        $per_page = $request->query('per_page', 5);
+        $cars = Car::paginate($per_page);
 
         return $cars;
     }
