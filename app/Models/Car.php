@@ -16,14 +16,14 @@ class Car extends Model
         if (!$brand) {
             return $query;
         }
-        return self::where('brand', $brand);
+        return self::where('brand', 'LIKE', '%' . $brand . '%');
     }
 
-    public static function scopeSearchByModel($query, $model)
+    public static function scopeSearchByModel($query,  $model)
     {
         if (!$model) {
             return $query;
         }
-        return self::where('model', $model);
+        return self::where('model', 'LIKE', '%' . $model . '%');
     }
 }

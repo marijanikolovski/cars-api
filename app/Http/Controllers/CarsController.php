@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Car;
 use App\Http\Requests\CreateCarRequest;
+use App\Http\Requests\UpdateCarRequest;
 
 class CarsController extends Controller
 {
@@ -22,6 +23,8 @@ class CarsController extends Controller
         $cars = Car::searchByBrand($brand)
             ->searchByModel($model)
             ->paginate($per_page);
+
+        $cars = Car::all();
 
         return $cars;
     }
@@ -44,17 +47,9 @@ class CarsController extends Controller
      */
     public function store(CreateCarRequest $request)
     {
-        $validated = $request->validated();
+        $data = $request->validated();
 
-        $carCreate = Car::create([
-            'brand' => $validated['brand'],
-            'model' => $validated['model'],
-            'year' => $validated['year'],
-            'max_speed' => $validated['max_speed'],
-            'is_automatic' => $validated['is_automatic'],
-            'engine' => $validated['engine'],
-            'number_of_doors' => $validated['number_of_doors'],
-        ]);
+        $carCreate = Car::create($data);
 
         return $carCreate;
     }
@@ -90,21 +85,13 @@ class CarsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateCarRequest $request, $id)
+    public function update(UpdateCarRequest $request, Car $car)
     {
-        $validated = $request->validated();
+        $data = $request->validated();
 
-        $carUpdate = Car::where($id)->update([
-            'brand' => $validated['brand'],
-            'model' => $validated['model'],
-            'year' => $validated['year'],
-            'max_speed' => $validated['max_speed'],
-            'is_automatic' => $validated['is_automatic'],
-            'engine' => $validated['engine'],
-            'number_of_doors' => $validated['number_of_doors'],
-        ]);
+        $car->update($data);
 
-        return $carUpdate;
+        return $car;
     }
 
     /**
@@ -115,6 +102,8 @@ class CarsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $carDelete = Car::find($id)->delete();
+
+        return 'Car delete';
     }
 }
